@@ -1,0 +1,47 @@
+
+// a maximum of eight servo objects can be created 
+ 
+Servo myservo;
+
+int val;
+
+int ledControl(String command);
+
+void setup() 
+
+{
+
+ myservo.attach(A7);  // attaches the servo on analog pin A7 to the servo object 
+Spark.function("ledstate", ledControl);
+
+}
+
+
+
+void loop()
+
+{
+    
+}
+
+int ledControl(String command)
+
+
+{  //if and else will set on off functionality
+    if (command == "1") {   
+
+    myservo.write(90);  
+
+
+  } else if(command == "0"){
+
+    myservo.write(0);  
+
+      }
+     
+    else{
+    val = command.toInt(); //converts command to integer to be used for positional arrangement
+    val = map (val, 0, 99, 0, 179);
+    myservo.write(val);
+    }
+}
