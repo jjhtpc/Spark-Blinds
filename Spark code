@@ -18,15 +18,14 @@
 
 Servo myservo;
 int state;
-int open 0;
-int closed 150;
+int open=0;
+int closed=150;
 
 // Functions
 int setState(String command);
 
 void setup(){
   myservo.attach(A7);   
-  Spark.function("ledstate", ledControl);
   myservo.attach(SERVO_PIN); // attaches the servo on analog pin A7 to the servo object
   Spark.function("setstate", setState);
   Spark.variable("getstate", &state, INT);
@@ -46,7 +45,7 @@ void loop(){
 
 int setState(String command){ 
     state = command.toInt(); 
-    state = map (state, 0, 99, OPEN, CLOSED);
+    state = map (state, 0, 99, open, closed);
     myservo.write(state);
     return 1;
 }
