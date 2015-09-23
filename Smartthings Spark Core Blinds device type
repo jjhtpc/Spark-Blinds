@@ -10,97 +10,89 @@
 
  */
 
- 
-
- preferences {
-
-    input("deviceId", "text", title: "Device ID")
-
-    input("token", "text", title: "Access Token")
-
+preferences {
+  input("deviceId", "text", title: "Device ID")
+  input("token", "text", title: "Access Token")
+  input("openThresh", "text", title: "Open Threshold", defaultValue: 10, required: false, displayDuringSetup: true)
+  input("open", "text", title: "Open", defaultValue: 99, required: false, displayDuringSetup: true)
+  input("closed", "text", title: "Closed", defaultValue: 20, required: false, displayDuringSetup: true)
 }
-
- 
-
- // for the UI
-
+// for the UI
 metadata {
+  // Automatically generated. Make future change here.
+  definition (name: "Spark Core Blinds", author: "Garrett Hawes") {
+    capability "Switch Level"
+    capability "Switch"
+    capability "Refresh"
+    capability "Polling"
 
-    // Automatically generated. Make future change here.
+    attribute "openThresh", "string"
+    attribute "open", "string"
+    attribute "closed", "string"
 
-    definition (name: "Spark Core Blinds", author: "justinwurth@gmail.com") {
-		
-        capability "Switch Level"
-        capability "Switch"
-
+    command "setLevel"
+    command "getLevel"
+  }
+  // tile definitions
+  tiles {
+    standardTile("switch", "device.switch", width: 2, height: 2, canChangeIcon: false) {
+      state "off", label:'closed', action:"switch.on", icon:"st.switches.switch.on", backgroundColor:"#79b821", nextState:"opening"
+      state "on", label:'open', action:"switch.off", icon:"st.doors.garage.garage-open", backgroundColor:"#ffa81e", nextState:"closing"
+      state "opening", label:'${name}', icon:"st.doors.garage.garage-opening", backgroundColor:"#ffe71e"
+      state "closing", label:'${name}', icon:"st.doors.garage.garage-closing", backgroundColor:"#ffe71e"
     }
-
-
-    // tile definitions
-
-    tiles {
-		standardTile("switch", "device.switch", width: 2, height: 2, canChangeIcon: true) {
-			state "on", label:'${name}', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#79b821", nextState:"turningOff"
-			state "off", label:'${name}', action:"switch.on", icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState:"turningOn"
-			state "turningOn", label:'${name}', icon:"st.switches.switch.on", backgroundColor:"#79b821"
-			state "turningOff", label:'${name}', icon:"st.switches.switch.off", backgroundColor:"#ffffff"
-		}
-		
-		standardTile("refresh", "device.switch", inactiveLabel: false, decoration: "flat") {
-			state "default", label:"", action:"refresh.refresh", icon:"st.secondary.refresh"
-		}
-		controlTile("levelSliderControl", "device.level", "slider", height: 1, width: 3, inactiveLabel: false) {
-			state "level", action:"switch level.setLevel"
-		}
-
-		main(["switch"])
-		details(["switch", "refresh",  "levelSliderControl"])
-	}
-
-
+    standardTile("refresh", "device.switch", inactiveLabel: false, decoration: "flat") {
+      state "default", label:"", action:"refresh.refresh", icon:"st.secondary.refresh"
+    }
+    controlTile("levelSliderControl", "device.level", "slider", height: 1, width: 3, inactiveLabel: false) {
+      state "level", action:"switch level.setLevel"
+    }
+    main(["switch"])
+    details(["switch", "refresh", "levelSliderControl"])
+  }
 }
-
 
 def parse(String description) {
-
-    log.error "This device does not support incoming events"
-
-    return null
-
+  log.error "This device does not support incoming events"
+  return null
 }
 
-
-def on() {
-
-    put '1'
-
+def on() { 
+  put'20'
+  sendEvent(name: 'switch', value: 'on')
 }
-
-
 def off() {
-
-    put '0'
-
+  put'99'
+  sendEvent(name: 'switch', value: 'off')
+}
+def setLevel(val) {
+  def level = Math.min(val as Integer, 99)
+  if(level>80){
+    sendEvent(name: 'switch', value: 'off')
+  }
+  else{
+    sendEvent(name: 'switch', value: 'on')
+  }
+  put val
 }
 
-
-def setLevel(value) {
-    def level = Math.min(value as Integer, 99)
-    put value
+def getLevel(){ //TODO
 }
 
-private put(led) {
+def poll() { //TODO
+}
 
-    //Spark Core API Call
+def refresh() { //TODO
+}
 
-    httpPost(
-
-        uri: "https://api.spark.io/v1/devices/${deviceId}/ledstate",
-
-        body: [access_token: token, command: led],  
-
-    ) {response -> log.debug (response.data)}
-
+private put(level) {
+//Spark Core API Call
+  sendEvent(name:"level",value:level)
+  sendEvent(name:"switch.setLevel",value:level) 
+  httpPost(
+    uri: "https://api.spark.io/v1/devices/${deviceId}/setstate",
+    body: [access_token: token, command: level],
+  ) {response -> log.debug (response.data)}
 }
 
 
