@@ -32,6 +32,8 @@ metadata {
 		
         capability "Switch Level"
         capability "Switch"
+        capability "Refresh"
+        capability "Polling"
 
     }
 
@@ -52,6 +54,9 @@ metadata {
 		controlTile("levelSliderControl", "device.level", "slider", height: 1, width: 3, inactiveLabel: false) {
 			state "level", action:"switch level.setLevel"
 		}
+		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat") {
+        	state "default", action:"refresh.refresh", icon: "st.secondary.refresh"
+        	}
 
 		main(["switch"])
 		details(["switch", "refresh",  "levelSliderControl"])
@@ -88,6 +93,21 @@ def setLevel(value) {
     def level = Math.min(value as Integer, 99)
     put value
 }
+
+def poll() {
+	log.debug "Executing 'poll'"
+	
+	checkStatus()
+}
+
+def refresh() {
+	log.debug "executing 'refresh'"
+	
+	checkStatus()
+}
+
+private checkStatus() {
+	httpGet ("https://api.spark.io/v1/devices/${deviceID}/${sparkVar}?access_token=${token}")
 
 private put(led) {
 
