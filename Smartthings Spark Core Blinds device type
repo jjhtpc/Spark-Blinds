@@ -106,6 +106,9 @@ def refresh() {
 	checkStatus()
 }
 
+def checkStatus(){
+ 	get
+
 private get() {
 	//Spark Core API call
 	log.debug "
