@@ -106,8 +106,15 @@ def refresh() {
 	checkStatus()
 }
 
-private checkStatus() {
-	httpGet ("https://api.spark.io/v1/devices/${deviceID}/${sparkVar}?access_token=${token}")
+private get() {
+	//Spark Core API call
+	log.debug "
+	httpGet ("https://api.spark.io/v1/devices/${deviceID}/${sparkVar}?access_token=${token}", checkstatus) {resp ->
+		resp.headers.each {
+		log.debug "${it.name} : ${it.value}"
+		}
+		}
+}
 
 private put(led) {
 
