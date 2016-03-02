@@ -11,7 +11,7 @@ void setup()
 
 {
 
- myservo.attach(A7);  // attaches the servo on analog pin A7 to the servo object 
+ myservo.attach(A4);  // attaches the servo on analog pin A4 to the servo object 
 Spark.function("ledstate", ledControl);
 Particle.publish("checkstatus", "off");
 
