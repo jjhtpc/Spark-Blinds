@@ -11,6 +11,6 @@ To use this code use the Smartthings ide to create a new device type entitled Sp
   Insert the Spark Core Blinds code into the device type code 
   Create a new device and then enter your Spark Core device id and Spark access token
   
-  Then use the Spark Core code and flash the code to the spark core.  Setup the Spark Core to the servo on pin A7 (or change the code to be something else)  It is good to note that this is coded to an analog servo.
+  Then use the Spark Core code and flash the code to the spark core.  Setup the Spark Core to the servo on pin A4 (or change the code to be something else)  It is good to note that this is coded to an analog servo.
   
 
