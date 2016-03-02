@@ -13,6 +13,7 @@ void setup()
 
  myservo.attach(A7);  // attaches the servo on analog pin A7 to the servo object 
 Spark.function("ledstate", ledControl);
+Particle.publish("checkstatus", "off");
 
 }
 
@@ -30,12 +31,14 @@ int ledControl(String command)
 {  //if and else will set on off functionality
     if (command == "1") {   
 
-    myservo.write(90);  
+    myservo.write(90); 
+    Particle.publish("checkstatus", "on");
 
 
   } else if(command == "0"){
 
     myservo.write(0);  
+    Particle.publish("checkstatus", "off");
 
       }
      
@@ -43,5 +46,6 @@ int ledControl(String command)
     val = command.toInt(); //converts command to integer to be used for positional arrangement
     val = map (val, 0, 99, 0, 179);
     myservo.write(val);
+    Particle.publish("checkstatus","on");
     }
 }
