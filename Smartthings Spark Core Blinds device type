@@ -67,7 +67,7 @@ metadata {
 
 
 def parse(String description) {
-	if(checstatus1 == "on"){
+	if(checStatus1 == "on"){
 	sendEvent(name: "switch", value: "on")
     	}
 	else{
@@ -117,7 +117,7 @@ def checkStatus(){
 private get() {
 	//Spark Core API call
 
-	httpGet ("https://api.spark.io/v1/devices/${deviceID}/${sparkVar}?access_token=${token}", checkstatus1) {resp ->
+	httpGet ("https://api.spark.io/v1/devices/${deviceID}/${sparkVar}?access_token=${token}", checkStatus1) {resp ->
 		resp.headers.each {
 		log.debug "${it.name} : ${it.value}"
 		}
