@@ -67,9 +67,13 @@ metadata {
 
 
 def parse(String description) {
-
-    log.error "This device does not support incoming events"
-
+	if(message == "switch.on"){
+	sendEvent(name: "switch", value: "on")
+    	}
+	else{
+	sendEvent(name: "switch", value: "off")
+	}
+	log.error "This device does not support incoming events"
     return null
 
 }
@@ -115,7 +119,7 @@ private get() {
 	log.debug "
 	httpGet ("https://api.spark.io/v1/devices/${deviceID}/${sparkVar}?access_token=${token}", checkstatus) {resp ->
 		resp.headers.each {
-		log.debug "${it.name} : ${it.value}"
+		log.debug "${it.name} : ${it.device_type} : ${it.value}"
 		}
 		}
 }
