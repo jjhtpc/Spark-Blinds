@@ -67,12 +67,7 @@ metadata {
 
 
 def parse(String description) {
-	if(checStatus1 == "on"){
-	sendEvent(name: "switch", value: "on")
-    	}
-	else{
-	sendEvent(name: "switch", value: "off")
-	}
+	
 	log.error "This device does not support incoming events"
     return null
 
@@ -117,11 +112,12 @@ def checkStatus(){
 private get() {
 	//Spark Core API call
 
-	httpGet ("https://api.spark.io/v1/devices/${deviceID}/${sparkVar}?access_token=${token}", checkStatus1) {resp ->
-		resp.headers.each {
+	httpGet (uri:"https://api.spark.io/v1/devices/${deviceID}/access_token=${token}/checkStatus1") {
+    	resp ->	(result = resp.headers.each) {
 		log.debug "${it.name} : ${it.value}"
 		}
-		}
+       	}
+        sendEvent(name: "switch", value: 'result')
 }
 
 private put(led) {
@@ -137,6 +133,7 @@ private put(led) {
     ) {response -> log.debug (response.data)}
 
 }
+
 
 
 
