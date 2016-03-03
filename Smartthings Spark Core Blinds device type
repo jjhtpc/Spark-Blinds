@@ -112,7 +112,7 @@ def checkStatus(){
 private get() {
 	//Spark Core API call
 
-	httpGet (uri:"https://api.particle.io/v1/devices/events/checkStatus1/access_token/${token}"
+	httpGet (uri:"https://api.particle.io/v1/devices/&{deviceID}/varaibles/checkStatus1/access_token/${token}"
 	
 	//"https://api.spark.io/v1/devices/${deviceID}/access_token=${token}/checkStatus1") 
 	{
