@@ -106,21 +106,22 @@ def refresh() {
 }
 
 def checkStatus(){
- 	get()
+ 	getStatus()
 }
 
-private get() {
-	//Spark Core API call
+private getStatus(){
 
-	httpGet (uri:"https://api.particle.io/v1/devices/&{deviceID}/varaibles/checkStatus1/access_token/${token}"
-	
-	//"https://api.spark.io/v1/devices/${deviceID}/access_token=${token}/checkStatus1") 
-	{
-    	resp ->	(result = resp.headers.each) {
-		log.debug "${it.name} : ${it.value}"
-		}
-       	}
-        sendEvent(name: "switch", value: 'result')
+	def statusClosure = { response ->
+		log.debug "Status request was successful, $response.data"
+   
+	sendEvent(name: "switch", value: "$response.data" )
+	}
+
+	def statusParams = [
+		uri: "https://api.spark.io/v1/devices/${deviceId}/checkStatus1",
+            	body: [access_token: token],
+		success: statusClosure
+		]
 }
 
 private put(led) {
@@ -136,6 +137,7 @@ private put(led) {
     ) {response -> log.debug (response.data)}
 
 }
+
 
 
 
