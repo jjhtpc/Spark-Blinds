@@ -77,14 +77,14 @@ def parse(String description) {
 def on() {
 
     put '1'
-
+	sendEvent(name: "switch", value: "on" )
 }
 
 
 def off() {
 
     put '0'
-
+	sendEvent(name: "switch", value: "off" )
 }
 
 
@@ -95,34 +95,25 @@ def setLevel(value) {
 
 def poll() {
 	log.debug "Executing 'poll'"
-	
-	checkStatus()
+	 checkStatus ()	
 }
 
 def refresh() {
 	log.debug "executing 'refresh'"
-	
 	checkStatus()
-}
 
+}
 def checkStatus(){
- 	getStatus()
-}
-
-private getStatus(){
-
-	def statusClosure = { response ->
-		log.debug "Status request was successful, $response.data"
-   
-	sendEvent(name: "switch", value: "$response.data" )
+	
+	httpGet(uri: "https://api.particle.io/v1/devices/${deviceId}/checkStatus1?access_token=${token}",
+    	contentType: 'application/json',)
+    {resp ->           
+            log.debug "resp data: ${resp.data}"
+            log.debug "result: ${resp.data.result}"
+		sendEvent(name: "switch", value: "${resp.data.result}" )
 	}
-
-	def statusParams = [
-		uri: "https://api.spark.io/v1/devices/${deviceId}/checkStatus1",
-            	body: [access_token: token],
-		success: statusClosure
-		]
 }
+
 
 private put(led) {
 
@@ -130,7 +121,7 @@ private put(led) {
 
     httpPost(
 
-        uri: "https://api.spark.io/v1/devices/${deviceId}/ledstate",
+        uri: "https://api.particle.io/v1/devices/${deviceId}/ledstate",
 
         body: [access_token: token, command: led],  
 
