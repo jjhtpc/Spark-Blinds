@@ -33,12 +33,16 @@ int ledControl(String command)
 
     myservo.write(90); 
     Particle.variable("checkStatus1", "on");
+    delay(500);
+    analogWrite(A4,255);
 
 
   } else if(command == "0"){
 
     myservo.write(0);  
     Particle.variable("checkStatus1", "off");
+    delay(500);
+    analogWrite(A4,255);
 
       }
      
@@ -48,6 +52,8 @@ int ledControl(String command)
     myservo.write(val);
     delay(5);
     Particle.variable("checkStatus1", "on");
+    delay(500);
+    analogWrite(A4,255);
     }
 }
 
