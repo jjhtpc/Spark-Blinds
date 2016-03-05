@@ -30,23 +30,31 @@ int ledControl(String command)
 
 {  //if and else will set on off functionality
     if (command == "1") {   
-
+    myservo.attach(A4);
+    delay(500);
     myservo.write(90); 
     Particle.variable("checkStatus1", "on");
-
+    delay(1000);
+    myservo.detach();
+    
   } else if(command == "0"){
-
+    myservo.attach(A4);
+    delay(500);
     myservo.write(0);  
     Particle.variable("checkStatus1", "off");
-
+    delay(1000);
+    myservo.detach();
       }
      
     else{
+    myservo.attach(A4);
+    delay(500);
     val = command.toInt(); //converts command to integer to be used for positional arrangement
     val = map (val, 0, 99, 2, 170);
     myservo.write(val);
-    delay(5);
     Particle.variable("checkStatus1", "on");
+    delay(1200);
+    myservo.detach();
     }
 }
 
