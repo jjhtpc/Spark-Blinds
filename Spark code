@@ -27,9 +27,6 @@
 
 // a maximum of eight servo objects can be created 
 
-#include "particle-blinds.cpp"
-
-#include "particle-blinds.h" 
  
 Servo myservo;
 
@@ -42,6 +39,7 @@ void setup()
 {
 
 myservo.attach(A4);  // attaches the servo on analog pin A4 to the servo object 
+myservo.attach(A2);
 Particle.function("ledstate", ledControl);
 Particle.variable("checkStatus1", "off");
 
@@ -64,9 +62,21 @@ int ledControl(String command)
     Particle.variable("checkStatus1", "on");
     delay(1000);
     myservo.detach();
+	myservo.attach(A2);
+    delay(500);
+    myservo.write(90); 
+    Particle.variable("checkStatus1", "on");
+    delay(1000);
+    myservo.detach();
     
   } else if(command == "0"){
     myservo.attach(A4);
+    delay(500);
+    myservo.write(0);  
+    Particle.variable("checkStatus1", "off");
+    delay(1000);
+    myservo.detach();
+	myservo.attach(A2);
     delay(500);
     myservo.write(0);  
     Particle.variable("checkStatus1", "off");
@@ -78,13 +88,22 @@ int ledControl(String command)
     myservo.attach(A4);
     delay(500);
     val = command.toInt(); //converts command to integer to be used for positional arrangement
-    val = map (val, 0, 99, 2, 170);
+    val = map (val, 0, 99, 2, 180);
+    myservo.write(val);
+    Particle.variable("checkStatus1", "on");
+    delay(1200);
+    myservo.detach();
+	myservo.attach(A2);
+    delay(500);
+    val = command.toInt(); //converts command to integer to be used for positional arrangement
+    val = map (val, 0, 99, 2, 180);
     myservo.write(val);
     Particle.variable("checkStatus1", "on");
     delay(1200);
     myservo.detach();
     }
 }
+
 
 
 
